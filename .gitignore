@@ -1,0 +1,31 @@
+node_modules
+dist
+.DS_Store
+*.local
+.env
+.env.*
+!.env.example
+services/fleet-api/data
+
+# Python / tooling
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# IDE / OS
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Logs & temp
+*.log
+npm-debug.log*
+
+# Optional: huge local atlas checkout (re-download per README / scripts)
+content/meshes/TorontoHeartAtlas/repo/
+
+# Docker / local volumes (if ever created under repo root)
+imaging_data/

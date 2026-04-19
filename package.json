@@ -1,0 +1,31 @@
+{
+  "name": "cardiology-exam-room-viz",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "write-demo-glb": "node scripts/write-demo-triangle-glb.mjs",
+    "postinstall": "node scripts/write-demo-triangle-glb.mjs",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "fleet:dev": "npm --prefix services/fleet-api install && npm --prefix services/fleet-api run dev",
+    "stack:up": "docker compose -f infra/docker-compose.yml up --build"
+  },
+  "dependencies": {
+    "@react-three/drei": "^9.117.0",
+    "@react-three/fiber": "^8.17.10",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "three": "^0.170.0",
+    "three-stdlib": "^2.36.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@types/three": "^0.170.0",
+    "@vitejs/plugin-react": "^4.3.3",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.11"
+  }
+}

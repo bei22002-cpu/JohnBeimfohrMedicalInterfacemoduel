@@ -1,0 +1,17 @@
+{
+  "contentVersion": "1.0.0",
+  "signedAt": "2026-04-15T00:00:00Z",
+  "meshes": [
+    {
+      "id": "heart.shell",
+      "lod": "LOD1",
+      "uri": "meshes/heart_lod1.glb",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ],
+  "review": {
+    "clinicalReviewer": "Replace with signed reviewer",
+    "reviewDate": "2026-04-15",
+    "limitations": "Illustrative geometry — not patient-specific."
+  }
+}

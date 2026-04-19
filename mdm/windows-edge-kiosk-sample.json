@@ -1,0 +1,19 @@
+{
+  "@comment": "Sample Intune/MDM payload fragments — validate against your tenant policies. Not a complete profile.",
+  "edgeKioskMode": {
+    "kioskMode": "singleApp",
+    "appUserModelId": "MSEdge",
+    "urlAllowlist": [
+      "https://exam-room-viz.yourclinic.tld/",
+      "https://login.microsoftonline.com/"
+    ]
+  },
+  "deviceRestrictions": {
+    "usbStorage": "block",
+    "camera": "allowIfNeededForTelehealthOnly"
+  },
+  "network": {
+    "wiredEthernet": "required",
+    "wifi": "disabledForExamRooms"
+  }
+}
