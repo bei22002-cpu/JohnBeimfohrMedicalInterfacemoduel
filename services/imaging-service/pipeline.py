@@ -41,11 +41,50 @@ class SegmentationBackend(str, Enum):
     SLICER = "slicer"
 
 
+MAX_ZIP_FILES = int(os.environ.get("MAX_ZIP_FILES", "6000"))
+MAX_ZIP_TOTAL_BYTES = int(float(os.environ.get("MAX_ZIP_TOTAL_MB", "2048")) * 1024 * 1024)
+MAX_ZIP_MEMBER_BYTES = int(float(os.environ.get("MAX_ZIP_MEMBER_MB", "256")) * 1024 * 1024)
+
+
+def _safe_extract_zip(z: zipfile.ZipFile, dest_dir: Path) -> None:
+    dest_dir.mkdir(parents=True, exist_ok=True)
+    infos = z.infolist()
+    if len(infos) > MAX_ZIP_FILES:
+        raise RuntimeError(f"ZIP_TOO_MANY_FILES ({len(infos)} > {MAX_ZIP_FILES})")
+
+    total = 0
+    dest_root = dest_dir.resolve()
+    for info in infos:
+        # Block directories and weird absolute paths
+        name = info.filename
+        if not name or name.endswith("/"):
+            continue
+        if info.file_size > MAX_ZIP_MEMBER_BYTES:
+            raise RuntimeError(f"ZIP_MEMBER_TOO_LARGE ({info.file_size} bytes)")
+        total += info.file_size
+        if total > MAX_ZIP_TOTAL_BYTES:
+            raise RuntimeError(f"ZIP_TOO_LARGE ({total} bytes)")
+
+        out_path = (dest_dir / name).resolve()
+        if dest_root not in out_path.parents and out_path != dest_root:
+            raise RuntimeError("ZIP_PATH_TRAVERSAL_BLOCKED")
+
+    for info in infos:
+        name = info.filename
+        if not name or name.endswith("/"):
+            continue
+        # Extract explicitly to avoid zip-slip.
+        out_path = dest_dir / name
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        with z.open(info, "r") as src, open(out_path, "wb") as dst:
+            shutil.copyfileobj(src, dst)
+
+
 def _extract_zip_to_nifti(zip_path: Path, out_dir: Path) -> Path:
     dcm_dir = out_dir / "dicom"
     dcm_dir.mkdir(exist_ok=True)
     with zipfile.ZipFile(zip_path, "r") as z:
-        z.extractall(dcm_dir)
+        _safe_extract_zip(z, dcm_dir)
 
     nii_dir = out_dir / "nifti"
     nii_dir.mkdir(exist_ok=True)
