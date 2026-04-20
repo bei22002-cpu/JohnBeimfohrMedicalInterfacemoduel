@@ -4,10 +4,10 @@
 			"path": "."
 		},
 		{
-			"path": "../Downloads/Task02_Heart"
+			"path": "workspace/Task02_Heart"
 		},
 		{
-			"path": "../OneDrive/Claude Heart thin"
+			"path": "workspace/Claude Heart thin"
 		}
 	],
 	"settings": {}

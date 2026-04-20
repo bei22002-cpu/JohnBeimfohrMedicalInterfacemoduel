@@ -1,0 +1,21 @@
+# Core API
+fastapi==0.111.0
+uvicorn[standard]==0.29.0
+python-multipart==0.0.9
+
+# Medical imaging I/O
+nibabel==5.2.1
+pydicom==2.4.4
+dicom2nifti==2.4.11       # pure-python fallback if dcm2niix not installed
+
+# Segmentation backends
+# TotalSegmentator (downloads weights on first run, ~1 GB)
+TotalSegmentator==2.2.1
+# nnU-Net v2 (optional — comment out if not using)
+nnunetv2==2.4.2
+
+# Mesh pipeline
+scikit-image==0.23.1
+trimesh[easy]==4.3.2       # includes pygltflib for GLB export
+numpy==1.26.4
+scipy==1.13.0

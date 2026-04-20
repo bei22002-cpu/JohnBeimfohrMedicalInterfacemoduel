@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  imaging-service:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+    environment:
+      # Optional: point to your nnU-Net weights directory
+      - nnUNet_results=/app/data/nnunet_weights
+      # Optional: path to Slicer executable inside container
+      - SLICER_PATH=
+    # Uncomment for GPU acceleration (requires nvidia-container-toolkit)
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
