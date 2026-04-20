@@ -5,6 +5,8 @@ import { RoomChrome } from "./components/RoomChrome";
 import { AnnotationOverlay } from "./components/AnnotationOverlay";
 import { DicomUploader } from "./components/imaging/DicomUploader";
 import { ViewportToolbar } from "./components/ViewportToolbar";
+import { DemoTour } from "./components/DemoTour";
+import { HelpModal } from "./components/HelpModal";
 import { runtime } from "./config/runtime";
 import { registerDeviceIfNeeded, sendHeartbeat, postLatencyAudit } from "./fleet/fleetClient";
 import { hashCommand, measureFrameCommit } from "./telemetry/latency";
@@ -14,6 +16,7 @@ function Shell() {
   const { state, dispatch } = useSession();
   const lastSigRef = useRef("");
   const [showImaging, setShowImaging] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
 
   useEffect(() => {
     if (!runtime.fleetApiUrl) return;
@@ -47,6 +50,18 @@ function Shell() {
     <div className="app">
       <div className="viewport" key={state.sessionNonce}>
         <RoomCanvas />
+        <DemoTour />
+        {showHelp && (
+          <HelpModal
+            onClose={() => setShowHelp(false)}
+            onLaunchDemo={() => {
+              dispatch({ type: "RESET" });
+              dispatch({ type: "LOAD_DEMO_ENCOUNTER_MESH" });
+              dispatch({ type: "PRESET", key: "normal" });
+              setShowHelp(false);
+            }}
+          />
+        )}
         <div className="viewport-hud" aria-live="polite">
           <span className="hud-pill">{state.audience === "patient_friendly" ? "Patient view" : "Clinician view"}</span>
           {state.encounterMeshUrl ? (
@@ -60,7 +75,14 @@ function Shell() {
           ) : null}
           {!state.showSceneLabels ? <span className="hud-pill">Labels off</span> : null}
         </div>
-        <ViewportToolbar />
+        <ViewportToolbar
+          onOpenHelp={() => setShowHelp(true)}
+          onLaunchDemo={() => {
+            dispatch({ type: "RESET" });
+            dispatch({ type: "LOAD_DEMO_ENCOUNTER_MESH" });
+            dispatch({ type: "PRESET", key: "normal" });
+          }}
+        />
         <AnnotationOverlay
           enabled={state.frozen && state.drawMode}
           clearSignal={state.drawClearNonce}

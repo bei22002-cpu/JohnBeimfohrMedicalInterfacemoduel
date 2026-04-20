@@ -85,9 +85,22 @@ export function RoomChrome({ onOpenImaging }: { onOpenImaging?: () => void }) {
         </div>
 
         <div className="controls">
-          <div className="control-group" role="group" aria-label="Encounter imaging">
-            <button type="button" className="btn" onClick={() => onOpenImaging?.()} title="Upload DICOM zip to build encounter mesh">
-              Upload MRI/CT
+          <div className="control-group" role="group" aria-label="Start and reset">
+            <button
+              type="button"
+              className="btn primary"
+              onClick={() => {
+                dispatch({ type: "RESET" });
+                dispatch({ type: "LOAD_DEMO_ENCOUNTER_MESH" });
+                dispatch({ type: "PRESET", key: "normal" });
+              }}
+              title="Start the offline demo: loads bundled encounter mesh and a normal cycle scene"
+            >
+              Start demo
+            </button>
+
+            <button type="button" className="btn" onClick={() => dispatch({ type: "RESET" })} title="Reset session state and scene">
+              Reset
             </button>
 
             <button
@@ -114,18 +127,27 @@ export function RoomChrome({ onOpenImaging }: { onOpenImaging?: () => void }) {
               type="button"
               className="btn"
               onClick={() => dispatch({ type: "LOAD_DEMO_ENCOUNTER_MESH" })}
-              title="Load bundled offline demo mesh (minimal triangle GLB; no DICOM or network)"
+              title="Load bundled offline demo mesh (no DICOM or network)"
             >
-              Demo GLB
+              Load demo mesh
+            </button>
+
+            <button
+              type="button"
+              className="btn"
+              onClick={() => onOpenImaging?.()}
+              title="Upload a DICOM zip to build an encounter mesh (requires imaging service)"
+            >
+              Build from DICOM
             </button>
           </div>
 
-          <div className="control-group" role="group" aria-label="Markup and capture">
+          <div className="control-group" role="group" aria-label="Explain and annotate">
             <button
               type="button"
               className={`btn ${state.frozen ? "active" : ""}`}
               onClick={() => dispatch({ type: "SET_FROZEN", frozen: !state.frozen })}
-              title={state.frozen ? "Unfreeze animations" : "Freeze animations for drawing"}
+              title={state.frozen ? "Unfreeze animations" : "Freeze animations (recommended before drawing)"}
             >
               {state.frozen ? "Unfreeze" : "Freeze"}
             </button>
@@ -169,11 +191,7 @@ export function RoomChrome({ onOpenImaging }: { onOpenImaging?: () => void }) {
             </button>
           </div>
 
-          <div className="control-group" role="group" aria-label="Session and narration mode">
-            <button type="button" className="btn" onClick={() => dispatch({ type: "RESET" })}>
-              Reset room
-            </button>
-
+          <div className="control-group" role="group" aria-label="Narration mode">
             <button
               type="button"
               className={`btn ${state.audience === "patient_friendly" ? "active" : ""}`}

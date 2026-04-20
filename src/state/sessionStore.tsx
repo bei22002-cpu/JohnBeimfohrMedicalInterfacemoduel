@@ -247,12 +247,12 @@ function reducer(state: SessionState, action: Action): SessionState {
     case "CLEAR_ENCOUNTER_MESH":
       return { ...state, encounterMeshUrl: undefined, showEncounterMesh: false };
     case "LOAD_DEMO_ENCOUNTER_MESH":
-      // Minimal offline GLB (single triangle) — no network; see `npm run write-demo-glb` for `public/` copy
+      // Minimal offline GLB (low-poly icosahedron) — no network; see `getDemoEncounterMeshUrl()`
       return {
         ...state,
         encounterMeshUrl: getDemoEncounterMeshUrl(),
         showEncounterMesh: true,
-        statusLine: "Loaded offline demo mesh (minimal GLB) — encounter layer smoke test.",
+        statusLine: "Loaded offline demo mesh — encounter layer ready.",
       };
     case "SET_AUDIENCE":
       return {
