@@ -43,6 +43,9 @@ services:
       nnUNet_results: "/data/nnunet_weights"
       # Optional: Slicer not supported in container by default
       SLICER_PATH: ""
+      # Tighten CORS in production. In docker stack we go through nginx (same-origin),
+      # but keeping this sane helps if the service is accessed directly.
+      CORS_ORIGINS: "http://localhost:8080,http://127.0.0.1:8080"
     volumes:
       - imaging_data:/app/data
     ports:

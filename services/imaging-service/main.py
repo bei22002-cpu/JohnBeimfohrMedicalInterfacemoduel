@@ -10,6 +10,8 @@ from pathlib import Path
 from typing import Literal
 
 from fastapi import BackgroundTasks, FastAPI, File, HTTPException, UploadFile
+import os
+
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -28,9 +30,12 @@ app = FastAPI(
     version="0.1.0",
 )
 
+cors_origins = os.environ.get("CORS_ORIGINS", "").strip()
+origins = [o.strip() for o in cors_origins.split(",") if o.strip()] if cors_origins else ["*"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # tighten in prod
+    allow_origins=origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )
